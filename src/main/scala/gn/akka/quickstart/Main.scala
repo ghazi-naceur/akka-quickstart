@@ -1,11 +1,14 @@
 package gn.akka.quickstart
 
-import akka.actor.typed.{ActorSystem, Behavior}
+import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.scaladsl.Behaviors
+import gn.akka.quickstart.Notifier.Notification
+import gn.akka.quickstart.OrderFifthProcessor.FiPOrder
 import gn.akka.quickstart.OrderFirstProcessor.FPOrder
 import gn.akka.quickstart.OrderFourthProcessor.FoPOrder
 import gn.akka.quickstart.OrderSecondProcessor.SPOrder
 import gn.akka.quickstart.OrderThirdProcessor.TPOrder
+import gn.akka.quickstart.SecondShipper.SecondShipment
 import gn.akka.quickstart.Shipper.Shipment
 
 object OrderFirstProcessor {
@@ -77,6 +80,55 @@ object OrderFourthProcessor {
   }
 }
 
+object Notifier {
+  final case class Notification(orderId: Int, shipmentSuccess: Boolean)
+
+  def apply(): Behavior[Notification] = Behaviors.receive {
+    (context, message) =>
+      context.log.info(message.toString)
+      Behaviors.same
+  }
+}
+
+object SecondShipper {
+  final case class SecondShipment(
+      orderId: Int,
+      product: String,
+      number: Int,
+      replyTo: ActorRef[Notification]
+  )
+
+  def apply(): Behavior[SecondShipment] = Behaviors.receive {
+    (context, message) =>
+      context.log.info("This is the received shipment '{}'.", message.toString)
+      message.replyTo ! Notification(message.orderId, shipmentSuccess = true)
+      Behaviors.same
+  }
+}
+
+object OrderFifthProcessor {
+  final case class FiPOrder(
+      id: Int,
+      product: String,
+      number: Int
+  )
+  def apply(): Behavior[FiPOrder] = Behaviors.setup { context =>
+    val shipperRef = context.spawn(SecondShipper(), "second-shipper")
+    // make the shipper notify the actor notifierRef
+    val notifierRef = context.spawn(Notifier(), "notifier")
+    Behaviors.receiveMessage { message =>
+      context.log.info("This is the received order '{}'.", message.toString)
+      shipperRef ! SecondShipment(
+        message.id,
+        message.product,
+        message.number,
+        notifierRef
+      )
+      Behaviors.same
+    }
+  }
+}
+
 object Main extends App {
   // Actors communicate via messages in asynchronous way
   // bootstrapping the ActorSystem => entrypoint for our orders
@@ -107,4 +159,10 @@ object Main extends App {
   orderFourthProcessor ! FoPOrder(9, "chair", 3)
   orderFourthProcessor ! FoPOrder(10, "table", 2)
   orderFourthProcessor ! FoPOrder(11, "desk", 1)
+
+  val orderFifthProcessor: ActorSystem[OrderFifthProcessor.FiPOrder] =
+    ActorSystem(OrderFifthProcessor(), "orders-4")
+  orderFifthProcessor ! FiPOrder(12, "chair", 3)
+  orderFifthProcessor ! FiPOrder(13, "table", 2)
+  orderFifthProcessor ! FiPOrder(14, "desk", 1)
 }
