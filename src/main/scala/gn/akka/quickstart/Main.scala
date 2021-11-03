@@ -1,54 +1,28 @@
 package gn.akka.quickstart
 
-import akka.actor.typed.{ActorRef, Behavior, ActorSystem}
+import akka.actor.typed.{ActorRef, ActorSystem, Behavior}
 import akka.actor.typed.scaladsl.Behaviors
-import gn.akka.quickstart.GreeterMain.SayHello
+import gn.akka.quickstart.OrderProcessor.Order
 
-object Greeter {
-  final case class Greet(whom: String, replyTo: ActorRef[Greeted])
-  final case class Greeted(whom: String, from: ActorRef[Greet])
-
-  def apply(): Behavior[Greet] = Behaviors.receive { (context, message) =>
-    context.log.info("Hello {}!", message.whom)
-    message.replyTo ! Greeted(message.whom, context.self)
-    Behaviors.same
+object OrderProcessor {
+  final case class Order(id: Int, product: String, number: Int) // the message to be sent
+  // Akka actor needs to have an apply method that returns a Behavior of something/message
+  def apply(): Behavior[Order] = Behaviors.receiveMessage { message =>
+    println(message.toString)
+    Behaviors.same // to advise the system to reuse the previous behavior. This is provided in order to avoid the allocation overhead
   }
-}
-
-object GreeterBot {
-  def apply(max: Int): Behavior[Greeter.Greeted] = {
-    bot(0, max)
-  }
-
-  private def bot(greetingCounter: Int, max: Int): Behavior[Greeter.Greeted] =
-    Behaviors.receive { (context, message) =>
-      val n = greetingCounter + 1
-      context.log.info("Greeting {} for {}", n, message.whom)
-      if (n == max) {
-        Behaviors.stopped
-      } else {
-        message.from ! Greeter.Greet(message.whom, context.self)
-        bot(n, max)
-      }
-    }
-}
-
-object GreeterMain {
-
-  final case class SayHello(name: String)
-
-  def apply(): Behavior[SayHello] =
-    Behaviors.setup { context =>
-      val greeter = context.spawn(Greeter(), "greeter")
-      Behaviors.receiveMessage { message =>
-        val replyTo = context.spawn(GreeterBot(max = 3), message.name)
-        greeter ! Greeter.Greet(message.name, replyTo)
-        Behaviors.same
-      }
-    }
 }
 
 object Main extends App {
-  val greeterMain: ActorSystem[GreeterMain.SayHello] = ActorSystem(GreeterMain(), "AkkaQuickStart")
-  greeterMain ! SayHello("someone")
+  // Actors communicate via messages in asynchronous way
+  // bootstrapping the ActorSystem => entrypoint for our orders
+  val orderProcessor: ActorSystem[OrderProcessor.Order] = ActorSystem(OrderProcessor(), "actors")
+  // sending messages with ! which is an asynchronous non-blocking call == fire and forget call
+  orderProcessor ! Order(0, "chair", 3)
+  orderProcessor ! Order(1, "table", 2)
+  orderProcessor ! Order(2, "desk", 1)
+  orderProcessor ! Order(3, "sofa", 1)
+  orderProcessor ! Order(4, "bed", 2)
+
+
 }
