@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.12.7"
 
-lazy val akkaVersion = "2.6.12"
+lazy val akkaVersion = "2.6.5"
 val akkaHttpVersion = "10.1.12"
 val commonsIOVersion = "2.6"
 val sparkVersion = "3.0.0"
@@ -12,6 +12,8 @@ val twitter4jVersion = "4.0.7"
 val log4jVersion = "2.4.1"
 val awsVersion = "1.9.0"
 val kafkaVersion = "2.4.0"
+val circeVersion = "0.12.3"
+val akkaHttpJsonSerializersVersion = "1.34.0"
 
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.2.3",
@@ -31,5 +33,10 @@ libraryDependencies ++= Seq(
   "org.twitter4j" % "twitter4j-stream" % twitter4jVersion,
   "com.amazonaws" % "aws-java-sdk-s3" % awsVersion,
   "org.apache.kafka" %% "kafka" % kafkaVersion,
-  "org.apache.kafka" % "kafka-streams" % kafkaVersion
+  "org.apache.kafka" % "kafka-streams" % kafkaVersion,
+  "io.circe" %% "circe-core" % circeVersion,
+  "io.circe" %% "circe-generic" % circeVersion,
+  "io.circe" %% "circe-parser" % circeVersion,
+  "de.heikoseeberger" %% "akka-http-circe" % akkaHttpJsonSerializersVersion,
+  "de.heikoseeberger" %% "akka-http-jackson" % akkaHttpJsonSerializersVersion
 )
