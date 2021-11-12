@@ -129,7 +129,7 @@ object AkkaTypedPattern {
     Thread.sleep(1000)
     root2.terminate()
 
-    val root3 = ActorSystem(phoneCallInitiatorV2, "PhoneCaller3")
+    val root3 = ActorSystem(phoneCallInitiatorV3(), "PhoneCaller3")
     root3 ! FindAndCallPhoneNumber("Takamora")
     root3 ! FindAndCallPhoneNumber("Ging")
 
