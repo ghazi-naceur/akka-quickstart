@@ -5,7 +5,7 @@ version := "0.1"
 scalaVersion := "2.12.7"
 
 lazy val akkaVersion = "2.6.5"
-val akkaHttpVersion = "10.1.12"
+val akkaHttpVersion = "10.2.0"
 val commonsIOVersion = "2.6"
 val sparkVersion = "3.0.0"
 val twitter4jVersion = "4.0.7"

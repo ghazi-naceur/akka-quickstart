@@ -82,12 +82,12 @@ object AkkaTypedIncentives {
   // 3- hierarchy
 //  Common anti-pattern in the old Akka API is 'System.actorOf'. It resulted a very flat Actor hierarchies.
 //  In the new Akka API, you can't to spawn Actors. You can only spawn child Actors from a given Actor
-  val rootOnlineStoreActor: ActorSystem[ShoppingCartMessage] = ActorSystem(
-    Behaviors.setup { context =>
-      // Create children here
-      context.spawn(shoppingBehavior(Set()), "shoppingCart")
-      Behaviors.empty
-    },
-    "onlineStore"
-  )
+//  val rootOnlineStoreActor: ActorSystem[ShoppingCartMessage] = ActorSystem(
+//    Behaviors.setup { context =>
+//      // Create children here
+//      context.spawn(shoppingBehavior(Set()), "shoppingCart")
+//      Behaviors.empty
+//    },
+//    "onlineStore"
+//  )
 }
