@@ -7,6 +7,7 @@ import java.util.concurrent.Executors
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
 
+// https://www.youtube.com/watch?v=Mh-xFgSaQn0
 object AkkaTypedPattern {
 
   // How we can pipe things to an actor == handling results of asynchronous computation == Actor encapsulation

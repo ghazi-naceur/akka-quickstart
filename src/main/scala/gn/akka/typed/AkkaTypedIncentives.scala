@@ -3,6 +3,7 @@ package gn.akka.typed
 import akka.actor.typed.{ActorSystem, Behavior}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 
+// https://www.youtube.com/watch?v=GLrQmnIZXm8
 object AkkaTypedIncentives {
   // Akka Typed is praised for bringing compile-time checks to Actors, and a whole Actor API.
   // The messages that an Actor can receive will be reflected in the Actor itself and vice-versa. So the type of its Actor
