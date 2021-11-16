@@ -82,11 +82,11 @@ object AkkaHttpJackson extends JacksonSupport {
 
   implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "AkkaHttpJson")
 
-  val akkaHttpRouteWithCirce: Route = (path("akka-with-jackson" / "user") & post) {
+  val akkaHttpRouteWithJackson: Route = (path("akka-with-jackson" / "user") & post) {
     complete("received!")
   }
 
-  val sprayRouteWithCirce: Route = (path("spray-with-jackson" / "user") & post) {
+  val sprayRouteWithJackson: Route = (path("spray-with-jackson" / "user") & post) {
     // 'as' will fetch whatever converter you have for the specified type (in our case: Person)
     entity(as[Person]) { person: Person =>
       complete(UserAdded(UUID.randomUUID().toString, System.currentTimeMillis()))
@@ -96,8 +96,8 @@ object AkkaHttpJackson extends JacksonSupport {
   def main(args: Array[String]): Unit = {
     Http()
       .newServerAt("localhost", 9050)
-      //      .bind(akkaHttpRouteWithCirce)
-      .bind(sprayRouteWithCirce)
+      //      .bind(akkaHttpRouteWithJackson)
+      .bind(sprayRouteWithJackson)
 
   }
 }
