@@ -6,6 +6,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
+import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 import spray.json._
 
 import java.util.UUID
@@ -43,6 +44,35 @@ object AkkaHttpJson extends PersonJsonProtocol with SprayJsonSupport {
       .newServerAt("localhost", 9050)
       //      .bind(akkaHttpRoute)
       .bind(sprayRoute)
+
+  }
+}
+
+object AkkaHttpCirce extends FailFastCirceSupport {
+  // extending FailFastCirceSupport in order to add some additional implicits for requests, responses and internal representations
+  import io.circe.generic.auto._
+  // This package will automatically create some implicit conversions from your case classes into the format that Circe
+  // understands // the correct technical terms are: implicit encoders/decoders
+  // It works with implicit Macros, that generate some additional code
+
+  implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "AkkaHttpJson")
+
+  val akkaHttpRouteWithCirce: Route = (path("akka-with-circe" / "user") & post) {
+    complete("received!")
+  }
+
+  val sprayRouteWithCirce: Route = (path("spray-with-circe" / "user") & post) {
+    // 'as' will fetch whatever converter you have for the specified type (in our case: Person)
+    entity(as[Person]) { person: Person =>
+      complete(UserAdded(UUID.randomUUID().toString, System.currentTimeMillis()))
+    }
+  }
+
+  def main(args: Array[String]): Unit = {
+    Http()
+      .newServerAt("localhost", 9050)
+      //      .bind(akkaHttpRouteWithCirce)
+      .bind(sprayRouteWithCirce)
 
   }
 }

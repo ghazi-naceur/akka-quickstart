@@ -1,4 +1,10 @@
+1- Akka http:
 curl -XPOST -H "Content-Type: application/json" -d "{\"name\": \"Isaac\", \"age\": 125}" http://localhost:9050/akka/user
 
+2- Spray:
 curl -XPOST -H "Content-Type: application/json" -d "{\"name\": \"Isaac\", \"age\": 125}" http://localhost:9050/spray/user
 curl -XPOST -H "Content-Type: application/json" -d '{"name": "Isaac", "age": 125}' http://localhost:9050/spray/user
+
+3- Circe:
+curl -XPOST -H "Content-Type: application/json" -d '{"name": "Isaac", "age": 125}' http://localhost:9050/akka-with-circe/user
+curl -XPOST -H "Content-Type: application/json" -d '{"name": "Isaac", "age": 125}' http://localhost:9050/spray-with-circe/user
