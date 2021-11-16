@@ -8,3 +8,7 @@ curl -XPOST -H "Content-Type: application/json" -d '{"name": "Isaac", "age": 125
 3- Circe:
 curl -XPOST -H "Content-Type: application/json" -d '{"name": "Isaac", "age": 125}' http://localhost:9050/akka-with-circe/user
 curl -XPOST -H "Content-Type: application/json" -d '{"name": "Isaac", "age": 125}' http://localhost:9050/spray-with-circe/user
+
+4- Jackson:
+curl -XPOST -H "Content-Type: application/json" -d '{"name": "Isaac", "age": 125}' http://localhost:9050/akka-with-jackson/user
+curl -XPOST -H "Content-Type: application/json" -d '{"name": "Isaac", "age": 125}' http://localhost:9050/spray-with-jackson/user

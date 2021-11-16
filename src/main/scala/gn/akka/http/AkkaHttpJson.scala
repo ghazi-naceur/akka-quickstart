@@ -7,6 +7,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
+import de.heikoseeberger.akkahttpjackson.JacksonSupport
 import spray.json._
 
 import java.util.UUID
@@ -62,6 +63,30 @@ object AkkaHttpCirce extends FailFastCirceSupport {
   }
 
   val sprayRouteWithCirce: Route = (path("spray-with-circe" / "user") & post) {
+    // 'as' will fetch whatever converter you have for the specified type (in our case: Person)
+    entity(as[Person]) { person: Person =>
+      complete(UserAdded(UUID.randomUUID().toString, System.currentTimeMillis()))
+    }
+  }
+
+  def main(args: Array[String]): Unit = {
+    Http()
+      .newServerAt("localhost", 9050)
+      //      .bind(akkaHttpRouteWithCirce)
+      .bind(sprayRouteWithCirce)
+
+  }
+}
+
+object AkkaHttpJackson extends JacksonSupport {
+
+  implicit val system: ActorSystem[Nothing] = ActorSystem(Behaviors.empty, "AkkaHttpJson")
+
+  val akkaHttpRouteWithCirce: Route = (path("akka-with-jackson" / "user") & post) {
+    complete("received!")
+  }
+
+  val sprayRouteWithCirce: Route = (path("spray-with-jackson" / "user") & post) {
     // 'as' will fetch whatever converter you have for the specified type (in our case: Person)
     entity(as[Person]) { person: Person =>
       complete(UserAdded(UUID.randomUUID().toString, System.currentTimeMillis()))
