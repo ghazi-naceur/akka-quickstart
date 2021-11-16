@@ -1,1 +1,4 @@
-curl -XPOST -H "Content-Type: application/json" -d "{\"name\": \"Isaac\", \"age\": 125}" http://localhost:9050/api/user
+curl -XPOST -H "Content-Type: application/json" -d "{\"name\": \"Isaac\", \"age\": 125}" http://localhost:9050/akka/user
+
+curl -XPOST -H "Content-Type: application/json" -d "{\"name\": \"Isaac\", \"age\": 125}" http://localhost:9050/spray/user
+curl -XPOST -H "Content-Type: application/json" -d '{"name": "Isaac", "age": 125}' http://localhost:9050/spray/user
