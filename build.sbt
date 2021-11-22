@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.12.7"
 
-lazy val akkaVersion = "2.6.5"
+lazy val akkaVersion = "2.6.16"
 val akkaHttpVersion = "10.2.0"
 val commonsIOVersion = "2.6"
 val sparkVersion = "3.0.0"
@@ -23,6 +23,10 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence" % akkaVersion,
+  "com.typesafe.akka" %% "akka-remote" % akkaVersion,
+  "com.typesafe.akka" %% "akka-serialization-jackson" % akkaVersion,
+  "io.aeron" % "aeron-driver" % "1.32.0",
+  "io.aeron" % "aeron-client" % "1.32.0",
   "com.lightbend.akka" %% "akka-projection-eventsourced" % "1.2.2",
   "org.iq80.leveldb" % "leveldb" % "0.7",
 //  "com.google.protobuf" % "protobuf-java" % "2.5.0",
