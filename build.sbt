@@ -23,6 +23,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream" % akkaVersion,
   "com.typesafe.akka" %% "akka-actor-typed" % akkaVersion,
   "com.typesafe.akka" %% "akka-persistence" % akkaVersion,
+  "com.lightbend.akka" %% "akka-projection-eventsourced" % "1.2.2",
   "org.iq80.leveldb" % "leveldb" % "0.7",
 //  "com.google.protobuf" % "protobuf-java" % "2.5.0",
   "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
