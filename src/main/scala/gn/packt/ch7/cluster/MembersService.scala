@@ -37,3 +37,14 @@ object MembersServiceLookup {
 
   }
 }
+
+object MembersServiceRemoteCreation {
+  def main(args: Array[String]): Unit = {
+    val config = ConfigFactory.load.getConfig("MembersServiceRemoteCreation")
+    val system = ActorSystem("MembersServiceRemoteCreation", config)
+
+    val workerActor = system.actorOf(Props[SimpleWorker], "workerActorRemote")
+    println(s"The remote path of worker Actor is '${workerActor.path}'")
+    workerActor ! SimpleWorker.Work("Hi remote actor!")
+  }
+}
